@@ -1,0 +1,40 @@
+version: v1.0
+name: Test core
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+global_job_config:
+  prologue:
+    commands:
+      - checkout
+      - cache restore
+      - sem-version other 2.5.5
+      - sem-service start postgres 9.6 --username=postgres
+      - sem-version ruby 2.6.6
+      - bundle config set deployment true
+      - bundle config set jobs 8
+      - bundle install
+      - 'bundle exec rake db:setup'
+      - 'bundle exec rake db:test:prepare'
+      - 'bundle exec rake maxmind:install'
+  epilogue:
+    commands:
+      - cache store
+blocks:
+  - name: Tests
+    task:
+      jobs:
+        - name: Controllers
+          commands:
+            - bin/ci controllers
+        - name: Models
+          commands:
+            - bin/ci models
+        - name: Features
+          commands:
+            - bin/ci features
+        - name: Everything Else
+          commands:
+            - bin/ci default
+            - bundle exec teaspoon --fail-fast
