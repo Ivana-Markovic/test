@@ -1,13 +1,33 @@
 version: v1.0
-name: Initial Pipeline
+name: Test shop
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
+global_job_config:
+  prologue:
+    commands:
+      - checkout
+      - cache restore
+      - sem-version ruby 2.5.5
+      - change-phantomjs-version 2.1.1
+      - nvm use 6.1.0
+      - npm run build
+  epilogue:
+    commands:
+      - cache store
 blocks:
-  - name: 'Block #1'
+  - name: Tests
     task:
       jobs:
-        - name: 'Job #1'
+        - name: Ruby
           commands:
-            - checkout
+            - sem-service start postgres 9.6 --username=rails
+            - sem-version ruby 2.5.5
+            - 'gem install bundler:1.17.3'
+            - bundle install --deployment --path vendor/bundle --jobs 8
+            - 'bundle exec rails db:setup'
+            - bundle exec rspec
+        - name: JavaScript
+          commands:
+            - npm test
