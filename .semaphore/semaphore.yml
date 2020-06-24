@@ -28,6 +28,7 @@ blocks:
         - name: Controllers
           commands:
             - bin/ci controllers
+            - echo "this is a test"
         - name: Models
           commands:
             - bin/ci models
