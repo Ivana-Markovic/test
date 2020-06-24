@@ -9,7 +9,7 @@ global_job_config:
     commands:
       - checkout
       - cache restore
-      - sem-version other 2.5.5
+      - sem-version ruby 2.5.5
       - sem-service start postgres 9.6 --username=postgres
       - sem-version ruby 2.6.6
       - bundle config set deployment true
