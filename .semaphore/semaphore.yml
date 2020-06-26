@@ -9,9 +9,7 @@ global_job_config:
     commands:
       - checkout
       - cache restore
-      - sem-version ruby 2.5.5
-      - change-phantomjs-version 2.1.1
-      - nvm use 6.1.0
+      - sem-version 6.1.0
       - npm run build
   epilogue:
     commands:
