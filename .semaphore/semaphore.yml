@@ -9,7 +9,7 @@ global_job_config:
     commands:
       - checkout
       - cache restore
-      - sem-version 6.1.0
+      - sem-version node 6.1.0
       - npm run build
   epilogue:
     commands:
